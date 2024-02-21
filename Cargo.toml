@@ -1,0 +1,11 @@
+[package]
+name = "bevy-gotrue"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bevy = "0.13.0"
+go_true = {git = "https://github.com/bytemunch/gotrue-rs.git", branch = "bevy-fixes"}
+tokio = { version = "1.36.0", features = ["rt"] }
