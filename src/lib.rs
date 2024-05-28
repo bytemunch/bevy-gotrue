@@ -16,7 +16,7 @@ use bevy::utils::HashMap;
 use bevy_http_client::prelude::{
     HttpTypedRequestTrait, TypedRequest, TypedResponse, TypedResponseError,
 };
-use bevy_http_client::HttpClient;
+use bevy_http_client::{HttpClient, HttpClientSetting};
 use ehttp::Headers;
 use serde::Deserialize;
 use serde_json::Value;
@@ -79,13 +79,22 @@ impl AuthPlugin {
     }
 }
 
-#[derive(Resource)]
-struct AuthEndpoint(String);
-
 impl Plugin for AuthPlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(AuthEndpoint(self.endpoint.clone()))
-            .add_systems(PreStartup, (setup, start_provider_server))
+        if !app.world.contains_resource::<HttpClientSetting>() {
+            panic!("Please load bevy_http_client::BevyHttpClient plugin!");
+        }
+        let headers = Headers::new(&vec![]);
+        let sign_in = app.world.register_system(sign_in);
+
+        app.world.insert_resource(Client {
+            endpoint: self.endpoint.clone(),
+            headers,
+            sign_in,
+            access_token: None,
+        });
+
+        app.add_systems(PreStartup, start_provider_server)
             .add_systems(
                 Update,
                 (
@@ -109,21 +118,6 @@ pub fn just_logged_in(session: Option<Res<Session>>) -> bool {
 
 pub fn is_logged_in(session: Option<Res<Session>>) -> bool {
     session.is_some()
-}
-
-fn setup(world: &mut World) {
-    // TODO look for HttpClientPlugin, if not found panic and die.
-    let endpoint = world.get_resource::<AuthEndpoint>().unwrap().0.clone();
-    world.remove_resource::<AuthEndpoint>();
-    let headers = Headers::new(&vec![]);
-    let sign_in = world.register_system(sign_in);
-
-    world.insert_resource(Client {
-        endpoint,
-        headers,
-        sign_in,
-        access_token: None,
-    });
 }
 
 #[derive(Resource)]
