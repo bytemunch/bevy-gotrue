@@ -81,13 +81,13 @@ impl AuthPlugin {
 
 impl Plugin for AuthPlugin {
     fn build(&self, app: &mut App) {
-        if !app.world.contains_resource::<HttpClientSetting>() {
+        if !app.world().contains_resource::<HttpClientSetting>() {
             panic!("Please load bevy_http_client::BevyHttpClient plugin!");
         }
-        let headers = Headers::new(&vec![]);
-        let sign_in = app.world.register_system(sign_in);
+        let headers = Headers::new(&[]);
+        let sign_in = app.world_mut().register_system(sign_in);
 
-        app.world.insert_resource(Client {
+        app.world_mut().insert_resource(Client {
             endpoint: self.endpoint.clone(),
             headers,
             sign_in,
