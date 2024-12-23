@@ -2,6 +2,11 @@
 name = "bevy-gotrue"
 version = "0.2.0"
 edition = "2021"
+description = "supabase auth for bevy apps"
+repository = "https://github.com/bytemunch/bevy-gotrue"
+license = "MIT OR Apache-2.0"
+homepage = "https://github.com/bytemunch/bevy-gotrue"
+readme = "README.md"
 
 [dependencies]
 bevy = "0.15.0"
