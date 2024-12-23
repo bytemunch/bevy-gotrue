@@ -12,7 +12,7 @@ fn main() {
         })
         .add_systems(Startup, do_login)
         .add_systems(Update, did_login.run_if(just_logged_in))
-        .run()
+        .run();
 }
 
 fn do_login(mut commands: Commands, client: Res<Client>) {
