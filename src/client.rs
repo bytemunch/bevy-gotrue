@@ -1,11 +1,14 @@
-use bevy::ecs::system::{Commands, Resource, SystemId};
+use bevy::{
+    ecs::system::{Commands, Resource, SystemId},
+    prelude::In,
+};
 use ehttp::Headers;
 
 use crate::{AuthCreds, Builder};
 
 #[derive(Resource, Debug)]
 pub struct Client {
-    pub sign_in: SystemId<AuthCreds>,
+    pub sign_in: SystemId<In<AuthCreds>>,
     pub endpoint: String,
     pub headers: Headers,
     pub access_token: Option<String>,
